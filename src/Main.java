@@ -5,8 +5,8 @@ public class Main {
     public static void main(String[] args) {
         String[] products = {"Milk", "Bread", "Butter", "Eggs", "Ham"};
         int[] prices = {50, 30, 60, 10, 100};
-        File textFile = new File("basket.txt");
-        Basket basket = Basket.loadFromTxtFile(textFile);
+        File file = new File("basket.bin");
+        Basket basket = Basket.loadFromBinFile(file);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -20,7 +20,7 @@ public class Main {
             String input = scanner.nextLine();
 
             if ("end".equals(input)) {
-                basket.saveTxt(textFile);
+                basket.saveBin(file);
                 break;
             }
 

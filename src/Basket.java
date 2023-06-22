@@ -8,6 +8,23 @@ public class Basket implements Serializable {
     private int[] quantities;
     private int totalCost;
 
+    public void saveBin(File file) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            outputStream.writeObject(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Basket loadFromBinFile(File file) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
+            return (Basket) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return new Basket(new String[5], new int[5]);
+        }
+    }
+
     public Basket(String[] products, int[] prices) {
         this.products = products;
         this.prices = prices;
