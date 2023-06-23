@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -41,31 +43,39 @@ public class Basket implements Serializable {
     }
 
     public static Basket loadFromTxtFile(File textFile) {
-        try (Scanner scanner = new Scanner(textFile)) {
-            String[] products = new String[5];
-            int[] quantities = new int[5];
-            int[] prices = {50, 30, 60, 10, 100};
-            int totalCost = 0;
+    try (Scanner scanner = new Scanner(textFile)) {
+        List<String> products = new ArrayList<>();
+        List<Integer> quantities = new ArrayList<>();
+        List<Integer> prices = new ArrayList<>();
+        int totalCost = 0;
 
-            int index = 0;
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] parts = line.split(",");
-                products[index] = parts[0];
-                quantities[index] = Integer.parseInt(parts[1]);
-                totalCost += prices[index] * quantities[index];
-                index++;
-            }
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(",");
+            String product = parts[0];
+            int quantity = Integer.parseInt(parts[1]);
+            int price = Integer.parseInt(parts[2]);
 
-            Basket basket = new Basket(products, prices);
-            basket.setQuantities(quantities);
-            basket.setTotalCost(totalCost);
-            return basket;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return new Basket(new String[5], new int[5]);
+            products.add(product);
+            quantities.add(quantity);
+            prices.add(price);
+
+            totalCost += price * quantity;
         }
+
+        String[] productsArray = products.toArray(new String[0]);
+        int[] quantitiesArray = quantities.stream().mapToInt(Integer::intValue).toArray();
+        int[] pricesArray = prices.stream().mapToInt(Integer::intValue).toArray();
+
+        Basket basket = new Basket(productsArray, pricesArray);
+        basket.setQuantities(quantitiesArray);
+        basket.setTotalCost(totalCost);
+        return basket;
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+        return new Basket(new String[0], new int[0]);
     }
+}
 
     public String[] getProducts() {
         return products;
